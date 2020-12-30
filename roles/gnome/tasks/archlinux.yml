@@ -1,0 +1,16 @@
+---
+
+- name: Install Gnome & Virtualbox Guest additions
+  pacman:
+    name:
+      - gnome
+      - gnome-tweaks
+      - gdm
+      - networkmanager
+      - networkmanager-openvpn
+    state: present
+
+- name: Install Arc Theme
+  pacman:
+    name: arc-gtk-theme
+    state: present

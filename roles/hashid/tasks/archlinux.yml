@@ -1,0 +1,22 @@
+---
+
+- name: Ensure aur directory exists for user
+  become: yes
+  become_user: {{ user }}
+  file:
+    path: /home/{{ user }}/aur
+    state: directory
+
+- name: Clone hashid AUR repo
+  become: yes
+  become_user: {{ user }}
+  git:
+    repo: https://aur.archlinux.org/hashid.git
+    dest: /home/{{ user }}/aur/hashid
+
+- name: Install hashid
+  become: yes
+  become_user: {{ user }}
+  command: makepkg --noconfirm -si
+  args:
+    chdir: /home/{{ user }}/aur/hashid

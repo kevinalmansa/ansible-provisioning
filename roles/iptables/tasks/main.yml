@@ -1,0 +1,35 @@
+---
+
+- name: Run distro specific base tasks
+  include_tasks: "{{ loop_iptables_tasks }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution_release | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  loop_control:
+    loop_var: loop_iptables_tasks
+
+- name: Add ipv4 firewall config
+  copy:
+    src: iptables.rules
+    dest: /etc/iptables/iptables.rules
+
+- name: Add ipv6 firewall config
+  copy:
+    src: ip6tables.rules
+    dest: /etc/iptables/ip6tables.rules
+
+- name: Enable and start iptables
+  service:
+    name: iptables.service
+    enabled: yes
+    state: stopped
+
+- name: Enable and start ip6tables
+  service:
+    name: ip6tables.service
+    enabled: yes
+    state: stopped

@@ -1,0 +1,45 @@
+---
+
+- name: Run distro specific base tasks
+  include_tasks: "{{ loop_openssh_tasks }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution_release | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  loop_control:
+    loop_var: loop_openssh_tasks
+
+- name: regenerate host rsa keys
+  openssh_keypair:
+    path: /etc/ssh/ssh_host_rsa_key
+    type: rsa
+    size: 4096
+
+- name: regenerate host ed25519 keys
+  openssh_keypair:
+    path: /etc/ssh/ssh_host_rsa_key
+    type: ed25519
+
+- name: regenerate host ecdsa keys
+  openssh_keypair:
+    path: /etc/ssh/ssh_host_rsa_key
+    type: ecdsa
+
+- name: harden sshd config
+  copy:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Remove small diffie-hellman moduli
+  become: yes
+  shell: "awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.safe"
+
+- name: Remove small diffie-hellman moduli
+  become: yes
+  command: "mv /etc/ssh/moduli.safe /etc/ssh/moduli"

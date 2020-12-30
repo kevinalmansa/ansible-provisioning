@@ -1,0 +1,6 @@
+---
+
+- name: Ensure iptables is installed
+  pacman:
+    name: iptables
+    state: present

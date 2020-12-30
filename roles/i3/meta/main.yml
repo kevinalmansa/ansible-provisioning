@@ -1,0 +1,8 @@
+---
+
+dependencies:
+  - role: base
+  - role: asdf
+  - role: shell
+  - role: dotfiles
+  - role: xorg

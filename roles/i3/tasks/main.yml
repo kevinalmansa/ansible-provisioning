@@ -1,0 +1,141 @@
+---
+
+- name: Run distro specific base tasks
+  include_tasks: "{{ loop_i3_tasks }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution_release | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  loop_control:
+    loop_var: loop_i3_tasks
+
+- name: Ensures Screenshots  dir exists
+  file:
+    path: /home/{{ user }}/Pictures/Screenshots
+    state: directory
+    owner: {{ user }}
+    group: {{ user }}
+
+- name: Ensures Documents dir exists
+  file:
+    path: /home/{{ user }}/Documents
+    state: directory
+    owner: {{ user }}
+    group: {{ user }}
+
+- name: Copy gtk2.0 theme
+  copy:
+    src: gtkrc-2.0
+    dest: /home/{{ user }}/.gtkrc-2.0
+    owner: {{ user }}
+    group: {{ user }}
+    mode: '0644'
+
+- name: Ensures urxvt config dir exists
+  file:
+    path: /home/{{ user }}/.urxvt/ext
+    state: directory
+    owner: {{ user }}
+    group: {{ user }}
+
+- name: Copy urxvt configuration
+  copy: src={{ item.src }} dest={{ item.dest }} owner={{ user }} group={{ user }} mode='0755'
+  with_items:
+    - { src: 'urxvt/ext/clipboard', dest: '/home/{{ user }}/.urxvt/ext/clipboard' }
+    - { src: 'urxvt/ext/keyboard-select', dest: '/home/{{ user }}/.urxvt/ext/keyboard-select' }
+    - { src: 'urxvt/ext/url-select', dest: '/home/{{ user }}/.urxvt/ext/url-select' }
+
+- name: Ensures i3 config dir exists
+  file:
+    path: /home/{{ user }}/.config/i3
+    state: directory
+    owner: {{ user }}
+    group: {{ user }}
+
+- name: Copy i3 configuration
+  copy:
+    src: i3/config
+    dest: /home/{{ user }}/.config/i3/config
+    owner: {{ user }}
+    group: {{ user }}
+    mode: '0644'
+
+- name: Ensures i3status config dir exists
+  file:
+    path: /home/{{ user }}/.config/i3status
+    state: directory
+    owner: {{ user }}
+    group: {{ user }}
+
+- name: Copy i3 status bar configuration
+  copy:
+    src: i3status/config
+    dest: /home/{{ user }}/.config/i3status/config
+    owner: {{ user }}
+    group: {{ user }}
+    mode: '0644'
+
+- name: Copy Xresources configuration
+  copy:
+    src: xresources
+    dest: /home/{{ user }}/.Xresources
+    owner: {{ user }}
+    group: {{ user }}
+    mode: '0644'
+
+- name: Copy Xinit configuration
+  copy:
+    src: profile
+    dest: /home/{{ user }}/.profile
+    owner: {{ user }}
+    group: {{ user }}
+    mode: '0644'
+
+- name: Ensures backgrounds directory exists
+  file:
+    path: /usr/share/backgrounds
+    state: directory
+
+- name: Copy wallpaper for lightdm
+  copy:
+    src: wallpaper.png
+    dest: /usr/share/backgrounds/wallpaper.png
+    mode: '0644'
+
+- name: Copy user image for lightdm
+  copy:
+    src: archlinux-icon.svg
+    dest: /usr/share/backgrounds/archlinux-icon.svg
+    mode: '0644'
+
+- name: Copy wallpaper
+  copy:
+    src: wallpaper.png
+    dest: /home/{{ user }}/.wallpaper.png
+    owner: {{ user }}
+    group: {{ user }}
+    mode: '0644'
+
+- name: Copy wallpaper config
+  copy:
+    src: fehbg
+    dest: /home/{{ user }}/.fehbg
+    owner: {{ user }}
+    group: {{ user }}
+    mode: '0755'
+
+- name: Copy LightDM config
+  copy:
+    src: lightdm-gtk-greeter.conf
+    dest: /etc/lightdm/lightdm-gtk-greeter.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable LightDM
+  systemd:
+    name: lightdm
+    enabled: yes
