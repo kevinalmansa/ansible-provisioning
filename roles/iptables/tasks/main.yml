@@ -26,10 +26,8 @@
   service:
     name: iptables.service
     enabled: yes
-    state: stopped
 
 - name: Enable and start ip6tables
   service:
     name: ip6tables.service
     enabled: yes
-    state: stopped

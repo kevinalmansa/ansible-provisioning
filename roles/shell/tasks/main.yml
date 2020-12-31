@@ -16,23 +16,29 @@
   command: "chsh -s /bin/zsh {{ user }}"
   changed_when: False
 
+- name: Ensure oh-my-zsh directory exists for user
+  become: yes
+  become_user: "{{ user }}"
+  file:
+    path: "/home/{{ user }}/git/packages/oh-my-zsh"
+    state: directory
+
 - name: Download oh-my-zsh
   become: yes
   become_user: "{{ user }}"
   get_url:
     url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-    dest: /tmp/ohmyzsh_install.sh
+    dest: "/home/{{ user }}/git/packages/oh-my-zsh/ohmyzsh_install.sh"
     mode: '0755'
   register: ohmyzsh_download
 
 - name: Install oh-my-zsh
   become: yes
   become_user: "{{ user }}"
-  command: /tmp/ohmyzsh_install.sh
+  command: "/home/{{ user }}/git/packages/oh-my-zsh/ohmyzsh_install.sh"
   args:
     chdir: "/home/{{ user }}"
   when: ohmyzsh_download.changed
-  ignore_errors: yes
 
 - name: Ensure aur directory exists for user
   become: yes

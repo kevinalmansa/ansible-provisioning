@@ -1,7 +1,16 @@
+---
+
+- name: Ensure oh-my-zsh directory exists for user
+  become: yes
+  become_user: "{{ user }}"
+  file:
+    path: "/home/{{ user }}/git/packages/expand-disk"
+    state: directory
+
 - name: Copy extend_partition.sh script
   copy:
     src: extend_partition.sh
-    dest: /tmp/extend_partition.sh
+    dest: "/home/{{ user }}/git/packages/expand-disk/extend_partition.sh"
     owner: root
     group: root
     mode: '0755'
@@ -9,5 +18,5 @@
 
 - name: Resize root partition
   become: yes
-  shell: /tmp/extend_partition.sh
+  shell: "/home/{{ user }}/git/packages/expand-disk/extend_partition.sh"
   when: extended_partition_script.changed
