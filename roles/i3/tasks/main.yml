@@ -14,35 +14,40 @@
 
 - name: Ensures Screenshots  dir exists
   file:
-    path: /home/{{ user }}/Pictures/Screenshots
+    path: "/home/{{ user }}/Pictures/Screenshots"
     state: directory
-    owner: {{ user }}
-    group: {{ user }}
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 - name: Ensures Documents dir exists
   file:
-    path: /home/{{ user }}/Documents
+    path: "/home/{{ user }}/Documents"
     state: directory
-    owner: {{ user }}
-    group: {{ user }}
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 - name: Copy gtk2.0 theme
   copy:
     src: gtkrc-2.0
-    dest: /home/{{ user }}/.gtkrc-2.0
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.gtkrc-2.0"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Ensures urxvt config dir exists
   file:
-    path: /home/{{ user }}/.urxvt/ext
+    path: "/home/{{ user }}/.urxvt/ext"
     state: directory
-    owner: {{ user }}
-    group: {{ user }}
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 - name: Copy urxvt configuration
-  copy: src={{ item.src }} dest={{ item.dest }} owner={{ user }} group={{ user }} mode='0755'
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: '0755'
   with_items:
     - { src: 'urxvt/ext/clipboard', dest: '/home/{{ user }}/.urxvt/ext/clipboard' }
     - { src: 'urxvt/ext/keyboard-select', dest: '/home/{{ user }}/.urxvt/ext/keyboard-select' }
@@ -50,48 +55,48 @@
 
 - name: Ensures i3 config dir exists
   file:
-    path: /home/{{ user }}/.config/i3
+    path: "/home/{{ user }}/.config/i3"
     state: directory
-    owner: {{ user }}
-    group: {{ user }}
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 - name: Copy i3 configuration
   copy:
     src: i3/config
-    dest: /home/{{ user }}/.config/i3/config
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.config/i3/config"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Ensures i3status config dir exists
   file:
-    path: /home/{{ user }}/.config/i3status
+    path: "/home/{{ user }}/.config/i3status"
     state: directory
-    owner: {{ user }}
-    group: {{ user }}
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 - name: Copy i3 status bar configuration
   copy:
     src: i3status/config
-    dest: /home/{{ user }}/.config/i3status/config
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.config/i3status/config"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Copy Xresources configuration
   copy:
     src: xresources
-    dest: /home/{{ user }}/.Xresources
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.Xresources"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Copy Xinit configuration
   copy:
     src: profile
-    dest: /home/{{ user }}/.profile
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.profile"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Ensures backgrounds directory exists
@@ -114,17 +119,17 @@
 - name: Copy wallpaper
   copy:
     src: wallpaper.png
-    dest: /home/{{ user }}/.wallpaper.png
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.wallpaper.png"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Copy wallpaper config
   copy:
     src: fehbg
-    dest: /home/{{ user }}/.fehbg
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.fehbg"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0755'
 
 - name: Copy LightDM config

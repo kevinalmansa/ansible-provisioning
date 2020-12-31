@@ -2,21 +2,21 @@
 
 - name: Ensure aur directory exists for user
   become: yes
-  become_user: {{ user }}
+  become_user: "{{ user }}"
   file:
-    path: /home/{{ user }}/aur
+    path: "/home/{{ user }}/aur"
     state: directory
 
 - name: Clone google-chrome repo
   become: yes
-  become_user: {{ user }}
+  become_user: "{{ user }}"
   git:
     repo: https://aur.archlinux.org/google-chrome.git
-    dest: /home/{{ user }}/aur/google-chrome
+    dest: "/home/{{ user }}/aur/google-chrome"
 
 - name: Install google-chrome
   become: yes
-  become_user: {{ user }}
+  become_user: "{{ user }}"
   command: makepkg --noconfirm -si
   args:
-    chdir: /home/{{ user }}/aur/google-chrome
+    chdir: "/home/{{ user }}/aur/google-chrome"

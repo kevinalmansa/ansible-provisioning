@@ -35,4 +35,4 @@
 
 - include: theme.yml
   become: yes
-  become_user: {{ user }}
+  become_user: "{{ user }}"

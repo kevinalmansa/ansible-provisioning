@@ -12,8 +12,8 @@
   loop_control:
     loop_var: loop_wireshark_tasks
 
-- name: adding user {{ user }} to group wireshark
+- name: adding user "{{ user }}" to group wireshark
   user:
-    name: {{ user }}
+    name: "{{ user }}"
     groups: wireshark
     append: yes

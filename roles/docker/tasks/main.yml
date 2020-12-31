@@ -26,11 +26,11 @@
 
 - name: adding user to docker group
   user:
-    name: {{ user }}
-    groups: {{ docker_group }}
+    name: "{{ user }}"
+    groups: "{{ docker_group }}"
     append: yes
 
 - name: Enable docker
   service:
-    name: {{ docker_service }}
+    name: "{{ docker_service }}"
     enabled: yes

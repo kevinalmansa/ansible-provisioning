@@ -2,21 +2,21 @@
 
 - name: Ensure aur directory exists for user
   become: yes
-  become_user: {{ user }}
+  become_user: "{{ user }}"
   file:
-    path: /home/{{ user }}/aur
+    path: "/home/{{ user }}/aur"
     state: directory
 
 - name: Clone smbmap AUR repo
   become: yes
-  become_user: {{ user }}
+  become_user: "{{ user }}"
   git:
     repo: https://aur.archlinux.org/smbmap.git
-    dest: /home/{{ user }}/aur/smbmap
+    dest: "/home/{{ user }}/aur/smbmap"
 
 - name: Install smbmap
   become: yes
-  become_user: {{ user }}
+  become_user: "{{ user }}"
   command: makepkg --noconfirm -si
   args:
-    chdir: /home/{{ user }}/aur/smbmap
+    chdir: "/home/{{ user }}/aur/smbmap"

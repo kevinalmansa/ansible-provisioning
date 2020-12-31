@@ -3,24 +3,24 @@
 - name: Ensure Pictures folder exists
   file:
     path: /home/{{ user }}/Pictures
-    owner: {{ user }}
-    group: {{ user }}
+    owner: "{{ user }}"
+    group: "{{ user }}"
     state: directory
 
 - name: Copy wallpaper
   copy:
     src: wallpaper.png
-    dest: /home/{{ user }}/Pictures/wallpaper.png
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/Pictures/wallpaper.png"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Configure user avatar
   copy:
     src: face
-    dest: /home/{{ user }}/.face
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.face"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Set desktop background
@@ -63,12 +63,12 @@
   copy:
     src: snazzy-gnome-terminal-theme.dconf
     dest: /tmp/snazzy-gnome-terminal-theme.dconf
-    owner: {{ user }}
-    group: {{ user }}
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Set snazzy color scheme for Gnome Terminal
   become: yes
-  become_user: {{ user }}
+  become_user: "{{ user }}"
   shell: "dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < /tmp/snazzy-gnome-terminal-theme.dconf"
   ignore_errors: yes

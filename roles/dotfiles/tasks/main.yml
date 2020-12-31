@@ -1,23 +1,23 @@
 - name: Copying zshrc file
   copy:
     src: zshrc
-    dest: /home/{{ user }}/.zshrc
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.zshrc"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Copying functions file
   copy:
     src: functions
-    dest: /home/{{ user }}/.functions
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.functions"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
 
 - name: Copying aliases
   copy:
     src: aliases
-    dest: /home/{{ user }}/.aliases
-    owner: {{ user }}
-    group: {{ user }}
+    dest: "/home/{{ user }}/.aliases"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: '0644'
