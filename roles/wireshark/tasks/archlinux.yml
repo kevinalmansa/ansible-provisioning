@@ -1,0 +1,6 @@
+---
+
+- name: Installing wireshark
+  pacman:
+    name: wireshark-qt
+    state: present

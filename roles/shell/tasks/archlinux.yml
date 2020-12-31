@@ -1,0 +1,9 @@
+---
+
+- name: Install zsh
+  pacman:
+    name:
+      - zsh
+      - zsh-completions
+      - zsh-autosuggestions
+    state: present

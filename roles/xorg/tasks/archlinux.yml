@@ -1,0 +1,20 @@
+---
+
+- name: Remove default virtualbox-guest-nox
+  pacman:
+    name:
+      - virtualbox-guest-utils-nox
+    state: absent
+
+- name: Install xorg
+  pacman:
+    name:
+      - virtualbox-guest-utils
+      - xorg-server
+      - xorg-server-common
+      - xorg-xauth
+      - xorg-xinit
+      - xorg-xrdb
+      - mesa
+    state: present
+  when: host_type == "virtualbox"

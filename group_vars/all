@@ -1,2 +1,3 @@
 user: vagrant
 terraform_version: 0.12.29
+host_type: virtualbox

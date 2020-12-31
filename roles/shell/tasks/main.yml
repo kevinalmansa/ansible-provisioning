@@ -1,0 +1,89 @@
+---
+
+- name: Run distro specific base tasks
+  include_tasks: "{{ loop_shell_tasks }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution_release | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  loop_control:
+    loop_var: loop_shell_tasks
+
+- name: Set default shell to zsh for {{ user }} user
+  command: chsh -s /bin/zsh {{ user }}
+
+- name: Download oh-my-zsh
+  become: yes
+  become_user: {{ user }}
+  get_url:
+    url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+    dest: /tmp/ohmyzsh_install.sh
+    mode: '0755'
+
+- name: Install oh-my-zsh
+  become: yes
+  become_user: {{ user }}
+  command: /tmp/ohmyzsh_install.sh
+  args:
+    chdir: /home/{{ user }}
+  ignore_errors: yes
+
+- name: Ensure aur directory exists for user
+  become: yes
+  become_user: {{ user }}
+  file:
+    path: /home/{{ user }}/aur
+    state: directory
+
+- name: Clone powerline fonts AUR repo
+  become: yes
+  become_user: {{ user }}
+  git:
+    repo: https://aur.archlinux.org/powerline-fonts-git.git
+    dest: /home/{{ user }}/aur/powerline-fonts-git
+
+- name: Install powerline fonts
+  become: yes
+  become_user: {{ user }}
+  command: makepkg --noconfirm -si
+  args:
+    chdir: /home/{{ user }}/aur/powerline-fonts-git
+
+- name: Git checkout nerd-fonts
+  become: yes
+  become_user: {{ user }}
+  git:
+    repo: 'https://github.com/ryanoasis/nerd-fonts.git'
+    dest: /home/{{ user }}/git/packages/nerd-fonts
+    depth: 1
+
+- name: Install nerd-fonts
+  become: yes
+  become_user: {{ user }}
+  command: /home/{{ user }}/git/packages/nerd-fonts/install.sh
+
+- name: Ensures go dir exists
+  file:
+    path: /home/{{ user }}/go
+    state: directory
+    owner: {{ user }}
+    group: {{ user }}
+
+- name: Download Spaceship
+  become: yes
+  become_user: {{ user }}
+  git:
+    repo: https://github.com/denysdovhan/spaceship-prompt.git
+    dest: /home/{{ user }}/git/packages/spaceship-prompt
+    depth: 1
+
+- name: Install Spaceship
+  file:
+    src: /home/{{ user }}/git/packages/spaceship-prompt/spaceship.zsh-theme
+    dest: /home/{{ user }}/.oh-my-zsh/custom/themes/spaceship.zsh-theme
+    owner: {{ user }}
+    group: {{ user }}
+    state: link
