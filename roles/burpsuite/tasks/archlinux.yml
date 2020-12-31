@@ -13,6 +13,7 @@
   git:
     repo: https://aur.archlinux.org/burpsuite.git
     dest: "/home/{{ user }}/aur/burpsuite"
+  register: burpsuite_clone
 
 - name: Install burpsuite
   become: yes
@@ -20,3 +21,4 @@
   command: makepkg --noconfirm -si
   args:
     chdir: "/home/{{ user }}/aur/burpsuite"
+  when: burpsuite_clone.changed

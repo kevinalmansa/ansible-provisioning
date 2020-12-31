@@ -14,6 +14,7 @@
     repo: https://github.com/asdf-vm/asdf.git
     dest: "/home/{{ user }}/git/packages/asdf"
     depth: 1
+  register: asdf_clone
 
 - name: Create symbolic link to asdf
   file:
@@ -27,12 +28,13 @@
   become: yes
   become_user: "{{ user }}"
   command: "/home/{{ user }}/.asdf/bin/asdf plugin-add terraform https://github.com/Banno/asdf-hashicorp.git"
-  when: (terraform_version is defined) and (terraform_version|length > 0)
+  when: (terraform_version is defined) and (terraform_version|length > 0) and (asdf_clone.changed)
   ignore_errors: yes
+
 
 - name: Install Terraform with asdf
   become: yes
   become_user: "{{ user }}"
   command: /home/{{ user }}/.asdf/bin/asdf install terraform {{ terraform_version }}
-  when: (terraform_version is defined) and (terraform_version|length > 0)
+  when: (terraform_version is defined) and (terraform_version|length > 0) and (asdf_clone.changed)
   ignore_errors: yes
