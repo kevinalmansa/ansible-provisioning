@@ -13,6 +13,7 @@
   git:
     repo: https://aur.archlinux.org/gobuster-git.git
     dest: "/home/{{ user }}/aur/gobuster-git"
+  register: gobuster_clone
 
 - name: Install gobuster
   become: yes
@@ -20,3 +21,4 @@
   command: makepkg --noconfirm -si
   args:
     chdir: "/home/{{ user }}/aur/gobuster-git"
+  when: gobuster_clone.changed

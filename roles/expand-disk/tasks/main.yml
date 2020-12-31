@@ -5,7 +5,9 @@
     owner: root
     group: root
     mode: '0755'
+  register: extended_partition_script
 
 - name: Resize root partition
   become: yes
   shell: /tmp/extend_partition.sh
+  when: extended_partition_script.changed

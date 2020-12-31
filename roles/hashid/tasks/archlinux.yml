@@ -13,6 +13,7 @@
   git:
     repo: https://aur.archlinux.org/hashid.git
     dest: "/home/{{ user }}/aur/hashid"
+  register: hashid_clone
 
 - name: Install hashid
   become: yes
@@ -20,3 +21,4 @@
   command: makepkg --noconfirm -si
   args:
     chdir: "/home/{{ user }}/aur/hashid"
+  when: hashid_clone.changed

@@ -14,6 +14,7 @@
 
 - name: Set default shell to zsh for {{ user }} user
   command: "chsh -s /bin/zsh {{ user }}"
+  changed_when: False
 
 - name: Download oh-my-zsh
   become: yes
@@ -22,6 +23,7 @@
     url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
     dest: /tmp/ohmyzsh_install.sh
     mode: '0755'
+  register: ohmyzsh_download
 
 - name: Install oh-my-zsh
   become: yes
@@ -29,6 +31,7 @@
   command: /tmp/ohmyzsh_install.sh
   args:
     chdir: "/home/{{ user }}"
+  when: ohmyzsh_download.changed
   ignore_errors: yes
 
 - name: Ensure aur directory exists for user
@@ -44,6 +47,7 @@
   git:
     repo: https://aur.archlinux.org/powerline-fonts-git.git
     dest: /home/{{ user }}/aur/powerline-fonts-git
+  register: powerlinefonts_clone
 
 - name: Install powerline fonts
   become: yes
@@ -51,6 +55,7 @@
   command: makepkg --noconfirm -si
   args:
     chdir: "/home/{{ user }}/aur/powerline-fonts-git"
+  when: powerlinefonts_clone.changed
 
 - name: Git checkout nerd-fonts
   become: yes
@@ -59,11 +64,13 @@
     repo: 'https://github.com/ryanoasis/nerd-fonts.git'
     dest: "/home/{{ user }}/git/packages/nerd-fonts"
     depth: 1
+  register: nerdfonts_clone
 
 - name: Install nerd-fonts
   become: yes
   become_user: "{{ user }}"
   command: "/home/{{ user }}/git/packages/nerd-fonts/install.sh"
+  when: nerdfonts_clone.changed
 
 - name: Ensures go dir exists
   file:

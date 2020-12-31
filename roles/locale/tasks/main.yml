@@ -18,6 +18,8 @@
     line: 'KEYMAP={{ console_keymap }}'
     state: present
   notify: Generate initramfs
+  register: vconsole_keymap
 
 - name: Configure keymap "{{ keymap }}"
   command: localectl set-keymap "{{ keymap }}"
+  when: vconsole_keymap.changed

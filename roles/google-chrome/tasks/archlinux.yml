@@ -13,6 +13,7 @@
   git:
     repo: https://aur.archlinux.org/google-chrome.git
     dest: "/home/{{ user }}/aur/google-chrome"
+  register: googlechrome_clone
 
 - name: Install google-chrome
   become: yes
@@ -20,3 +21,4 @@
   command: makepkg --noconfirm -si
   args:
     chdir: "/home/{{ user }}/aur/google-chrome"
+  when: googlechrome_clone.changed
