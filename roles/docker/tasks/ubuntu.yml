@@ -1,0 +1,42 @@
+---
+
+- name: Uninstall old versions
+  apt:
+    name: "{{ docker__old_pkgs }}"
+    state: absent
+
+- name: Install role dependencies
+  apt:
+    name: "{{ docker__pkg_dependencies }}"
+    state: present
+
+# TODO: make this distro independent
+- name: Add Docker apt key.
+  shell: "curl -fsSL {{ docker__apt_key_server }} | apt-key add -"
+
+- name: Configure Docker APT repo
+  template:
+    src: docker.j2
+    dest: /etc/apt/sources.list.d/docker.list
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install Docker
+  apt:
+    name: "{{ docker__package }}"
+    update_cache: true
+  notify: ["Restart Docker"]
+
+- name: Install Docker Compose
+  get_url:
+    url: "{{ docker__compose_url }}"
+    dest: "{{ docker__compose_dest_file }}"
+    force: true
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Install docker python bindings
+  pip:
+    name: docker
