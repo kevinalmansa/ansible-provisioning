@@ -11,8 +11,10 @@
     state: present
 
 # TODO: make this distro independent
-- name: Add Docker apt key.
-  shell: "curl -fsSL {{ docker__apt_key_server }} | apt-key add -"
+- name: Add Docker apt key
+  apt_key:
+    url: "{{ docker__apt_key_server }}"
+    state: present
 
 - name: Configure Docker APT repo
   template:
@@ -36,7 +38,3 @@
     owner: root
     group: root
     mode: "0755"
-
-- name: Install docker python bindings
-  pip:
-    name: docker
