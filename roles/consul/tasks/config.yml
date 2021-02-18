@@ -1,0 +1,37 @@
+---
+
+- name: generate consul key
+  block:
+    - name: generate consul key
+      command: /usr/local/bin/consul keygen
+      register: consul_keygen
+
+    - name: Save gossip encryption key
+      set_fact: consul_key={{ consul_keygen.stdout }}
+      ignore_errors: true
+  when:
+    - not consul_key
+    - not bootstrap_state.stat.exists | bool
+
+- name: read existing consul key
+  block:
+    - name: Read consul key
+      shell: 'cat /etc/consul.d/config.json | grep "encrypt" | sed -E ''s/"encrypt": "(.+)",?/\1/'' | sed ''s/^ *//;s/ *$//'''
+      register: consul_key_read
+      run_once: true
+      changed_when: False
+
+    - name: Save gossip encryption key
+      set_fact: consul_key={{ consul_key_read.stdout }}
+      ignore_errors: true
+  when:
+    - not consul_key
+    - bootstrap_state.stat.exists | bool
+
+- name: consul configuration template
+  template: 
+    src: config.json.j2
+    dest: /etc/consul.d/config.json
+  vars:
+    server_ip: "{{ consul_ip | default(ansible_default_ipv4.address, true) }}"
+    server_hostname: "{{ consul_hostname | default(ansible_hostname, true) }}"

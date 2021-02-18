@@ -1,0 +1,43 @@
+---
+
+- name: consul - Retrieve consul binary archive.
+  unarchive:
+    src: "https://releases.hashicorp.com/consul/1.9.3/consul_1.9.3_linux_amd64.zip"
+    dest: /tmp
+    creates: /usr/local/bin/consul
+    remote_src: yes
+
+- name: consul - Move consul binary into place.
+  command: cp /tmp/consul /usr/local/bin/consul
+  args:
+    creates: /usr/local/bin/consul
+
+- name: Ensure group "consul" exists
+  group:
+    name: consul
+    system: yes
+    state: present
+  register: consul_init
+
+- name: Add the user 'consul'
+  ansible.builtin.user:
+    name: consul
+    shell: /sbin/nologin
+    group: consul
+    system: yes
+
+- name: Create /var/lib/consul
+  file:
+    path: /var/lib/consul
+    state: directory
+    owner: consul
+    group: consul
+    mode: '0755'
+
+- name: Create /etc/consul.d
+  file:
+    path: /etc/consul.d
+    state: directory
+    owner: consul
+    group: consul
+    mode: '0755'

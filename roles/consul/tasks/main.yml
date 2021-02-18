@@ -1,0 +1,51 @@
+---
+
+- name: Ensure role dependencies are installed
+  include_tasks: dependencies.yml
+
+- name: Install consul agent
+  include_tasks: install.yml
+
+- name: Read bootstrap state
+  stat:
+    path: "/etc/consul.d/.bootstrapped"
+  register: bootstrap_state
+  ignore_errors: true
+
+- name: Configure consul agent
+  include_tasks: config.yml
+
+- name: Bootstrap consul service
+  block:
+    - name: consul server systemd service template
+      template: 
+        src: consul.server.service.j2
+        dest: /etc/systemd/system/consul.service
+      vars:
+        server_ip: "{{ consul_ip | default(ansible_default_ipv4.address, true) }}"
+        server_hostname: "{{ consul_hostname | default(ansible_hostname, true) }}"
+      when: consul_node_role != "client"
+    
+    - name: consul client systemd service template
+      template: 
+        src: consul.client.service.j2
+        dest: /etc/systemd/system/consul.service
+      vars:
+        server_ip: "{{ consul_ip | default(ansible_default_ipv4.address, true) }}"
+        server_hostname: "{{ consul_hostname | default(ansible_hostname, true) }}"
+      when: consul_node_role == "client"
+
+    - name: Start consul service
+      systemd:
+        daemon_reload: yes
+        state: started
+        enabled: yes
+        name: consul
+
+    - name: Create bootstrapped state file
+      file:
+        dest: "/etc/consul.d/.bootstrapped"
+        state: touch
+        mode: 0600
+  
+  when: not bootstrap_state.stat.exists

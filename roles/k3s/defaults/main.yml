@@ -3,3 +3,7 @@
 k3s_version: "v1.20.2+k3s1"
 hubble_host: "hubble.istari.local"
 helm_version: "v3.2.1"
+
+consul_enabled: yes
+consul_key: "{{ lookup('env','CONSUL_KEY') | default('', true) }}"
+consul_server_ip: "{{ lookup('env','CONSUL_SERVER_IP') | default('', true) }}"

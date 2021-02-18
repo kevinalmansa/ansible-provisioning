@@ -1,0 +1,9 @@
+---
+
+- name: Install package dependencies
+  apt:
+    pkg:
+    - unzip
+    - gnupg2
+    - curl
+    - wget

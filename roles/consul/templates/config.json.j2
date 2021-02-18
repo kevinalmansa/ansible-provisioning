@@ -1,0 +1,36 @@
+{
+{% if consul_node_role != 'client' %}
+    "bootstrap": true,
+    "server": true,
+    "addresses" : {
+        "http": "0.0.0.0",
+        "grpc": "0.0.0.0"
+    },
+    "ports": {
+        "grpc": 8502
+    },
+    "telemetry": {
+        "statsite_address": "{{ server_ip }}:2180"
+    },
+    "node_meta": {
+        "instance_type": "proxmox",
+        "environment": "lab",
+        "services_type": "mgmt"
+    },
+{% else %}
+    "server": false,
+    "node_meta": {
+        "instance_type": "proxmox",
+        "environment": "lab",
+    },
+{% endif %}
+    "bind_addr": "{{ server_ip }}",
+    "log_level": "INFO",
+    "enable_syslog": true,
+    "datacenter": "lab",
+    "node_name": "{{ server_hostname }}",
+    "data_dir": "/var/lib/consul",
+    "primary_datacenter": "lab",
+    "acl_default_policy": "allow",
+    "encrypt": "{{ consul_key }}"
+}

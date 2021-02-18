@@ -1,0 +1,64 @@
+---
+
+- name: Create consul k8s namespace
+  community.kubernetes.k8s:
+    name: consul
+    api_version: v1
+    kind: Namespace
+    state: present
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+- name: Create consul gossip secret
+  community.kubernetes.k8s:
+    state: present
+    definition: 
+      apiVersion: v1
+      kind: Secret
+      type: Opaque
+      metadata:
+        name: "consul-gossip-encryption-key"
+        namespace: "consul"
+      data:
+        key: "{{ consul_key | b64encode }}"
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+- name: Add hashicorp helm repo
+  community.kubernetes.helm_repository:
+    name: hashicorp
+    repo_url: "https://helm.releases.hashicorp.com"
+
+- name: Deploy Consul agent
+  community.kubernetes.helm:
+    name: consul-client
+    chart_ref: hashicorp/consul
+    release_namespace: consul
+    values:
+      global:
+        enabled: false
+        datacenter: lab
+        gossipEncryption:
+          secretName: consul-gossip-encryption-key
+          secretKey: key
+      client:
+        enabled: true
+        # Set this to true to expose the Consul clients using the Kubernetes node
+        # IPs. If false, the pod IPs must be routable from the external servers.
+        exposeGossipPorts: true
+        join:
+          - "{{ consul_server_ip }}"
+        extraConfig: |
+          {
+            "node_meta": {
+              "instance_type": "proxmox",
+              "environment": "lab",
+              "services_type": "k3s"
+            }
+          }
+      syncCatalog:
+        enabled: true
+        k8sDenyNamespaces: []
+
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml

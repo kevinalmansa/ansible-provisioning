@@ -46,7 +46,7 @@
   delegate_to: localhost
   when: installer_dl is changed
 
-- name: Ensure bpffs is mount (required by Cilium)
+- name: Ensure bpffs is mounted (required by Cilium)
   mount:
     src: bpffs
     path: /sys/fs/bpf
@@ -56,64 +56,9 @@
     passno: "0"
     state: mounted
 
-- name: Add cilium network plugin helm repo
-  community.kubernetes.helm_repository:
-    name: cilium
-    repo_url: "https://helm.cilium.io/"
+- name: Install network CNI
+  include_tasks: cni.yml
 
-- name: Deploy Cilium K8s CNI
-  community.kubernetes.helm:
-    name: cilium
-    chart_ref: cilium/cilium
-    release_namespace: kube-system
-    values:
-      containerRuntime:
-        integration: "containerd"
-        socketPath: "/var/run/k3s/containerd/containerd.sock"
-      kubeProxyReplacement: "strict"
-      hubble:
-        enabled: "true"
-        listenAddress: ":4244"
-        metrics:
-          enabled:
-          - dns
-          - drop
-          - tcp
-          - flow
-          - port-distribution
-          - icmp
-          - http
-        relay:
-          enabled: "true"
-        ui:
-          enabled: "true"
-          ingress:
-            enabled: true
-            hosts:
-            - "{{ hubble_host }}"
-      ipam:
-        mode: "kubernetes"
-  environment:
-    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-
-# - name: Create ambassador k8s namespace
-#   community.kubernetes.k8s:
-#     name: ambassador
-#     api_version: v1
-#     kind: Namespace
-#     state: present
-#   environment:
-#     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-
-# - name: Add Ambassador helm repo
-#   community.kubernetes.helm_repository:
-#     name: datawire
-#     repo_url: "https://www.getambassador.io"
-
-# - name: Deploy Cilium K8s CNI
-#   community.kubernetes.helm:
-#     name: ambassador
-#     chart_ref: datawire/ambassador
-#     release_namespace: ambassador
-#   environment:
-#     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+- name: Register with Consul
+  include_tasks: consul.yml
+  when: consul_enabled

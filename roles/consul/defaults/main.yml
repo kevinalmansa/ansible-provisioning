@@ -1,0 +1,6 @@
+consul_ip: ""
+consul_hostname: ""
+
+consul_node_role: "server"
+consul_key: "{{ lookup('env','CONSUL_KEY') | default('', true) }}"
+consul_server_ip: ""
