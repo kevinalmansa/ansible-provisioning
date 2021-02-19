@@ -1,3 +1,5 @@
 *.inv
 secrets*
 kubeconfig*
+
+group_vars/*/

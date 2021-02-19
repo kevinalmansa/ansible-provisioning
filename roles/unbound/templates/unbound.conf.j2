@@ -1,0 +1,36 @@
+# Managed by Ansible
+
+## Place additional configuration in /etc/unbound/unbound.conf.d/*.conf
+include: "/etc/unbound/unbound.conf.d/*.conf"
+
+server:
+    interface: 127.0.0.1
+    interface: {{ server_ip }}
+    interface: ::0
+    # allow recursive and non-recursive lookups
+    access-control: 127.0.0.0/8 allow_snoop
+    access-control: {{ network_cidr }} allow_snoop
+    access-control: ::1 allow_snoop
+
+    verbosity: 0
+    hide-identity: yes
+    hide-version: yes
+    prefetch: yes
+    do-ip4: yes
+    do-ip6: yes
+    do-udp: yes
+    do-tcp: yes
+    cache-max-ttl: 86400
+    cache-min-ttl: 3600
+    num-threads: 2
+
+    private-domain: "internal"
+    private-domain: "lab"
+    private-domain: "local"
+
+include: "/etc/unbound/domain.conf"
+
+forward-zone:
+   name: "."
+   forward-addr: 1.0.0.1@53#cloudflare
+   forward-addr: 1.1.1.1@53#cloudflare

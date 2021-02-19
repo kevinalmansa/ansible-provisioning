@@ -1,0 +1,57 @@
+---
+
+- name: Install Unbound
+  apt:
+    name: "unbound"
+    state: present
+
+- name: Get network ID of host
+  set_fact:
+    mask_cidr: "{{ ip_id | ipaddr('network/prefix') }}"
+  vars:
+    ip_id: "{{ ansible_default_ipv4.network }}/{{ansible_default_ipv4.netmask }}"
+
+- name: Get cidr IP of host
+  set_fact:
+    ip_cidr: "{{ ip | ipaddr('host/prefix') }}"
+  vars:
+    ip: "{{ ansible_default_ipv4.address  }}/{{ansible_default_ipv4.netmask }}"
+
+- name: Configure Unbound
+  template:
+    src: unbound.conf.j2
+    dest: /etc/unbound/unbound.conf
+  vars:
+    server_ip: "{{ ansible_default_ipv4.address }}"
+    network_cidr: "{{ mask_cidr }}"
+
+- name: Configure Unbound
+  template:
+    src: domain.conf.j2
+    dest: /etc/unbound/domain.conf
+
+- name: Disable cloud-init
+  file:
+    dest: "/etc/cloud/cloud-init.disabled"
+    state: touch
+    mode: 0640
+  changed_when: False
+
+- name: Update hosts netplan to configure use of local DNS
+  template:
+    src: 01-netcfg.yaml.j2
+    dest: /etc/netplan/01-netcfg.yaml
+  vars:
+    server_ip: "{{ ansible_default_ipv4.address }}"
+    network_cidr: "{{ mask_cidr }}"
+  register: network_conf
+
+- name: Disable cloud-init netplan
+  command: mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
+  args:
+    creates: /etc/netplan/50-cloud-init.yaml.bak
+    removes: /etc/netplan/50-cloud-init.yaml
+
+- name: Apply netplan
+  shell: netplan apply
+  when: network_conf is changed
