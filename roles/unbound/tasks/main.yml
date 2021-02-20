@@ -17,6 +17,19 @@
   vars:
     ip: "{{ ansible_default_ipv4.address  }}/{{ansible_default_ipv4.netmask }}"
 
+- name: Configure Unbound Domains
+  template:
+    src: domain.conf.j2
+    dest: /etc/unbound/domain.conf
+  notify: ["Restart Unbound"]
+
+- name: Configure consul integration with Unbound
+  copy:
+    src: consul.conf
+    dest: /etc/unbound/unbound.conf.d/consul.conf
+  when: consul_enabled
+  notify: ["Restart Unbound"]
+
 - name: Configure Unbound
   template:
     src: unbound.conf.j2
@@ -24,11 +37,7 @@
   vars:
     server_ip: "{{ ansible_default_ipv4.address }}"
     network_cidr: "{{ mask_cidr }}"
-
-- name: Configure Unbound
-  template:
-    src: domain.conf.j2
-    dest: /etc/unbound/domain.conf
+  notify: ["Restart Unbound"]
 
 - name: Disable cloud-init
   file:

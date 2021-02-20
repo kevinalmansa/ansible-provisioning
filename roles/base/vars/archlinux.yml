@@ -19,3 +19,4 @@ base_packages:
   - emacs
   - strace
   - man-db
+  - dnsutils
