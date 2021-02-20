@@ -10,6 +10,11 @@
        - name: foo-01.local.    
          ip: <ipv4 ip>
          ipv6: <ipv6 ip>       
+
+dns_hosts:
+- name: bar.local.
+  ip: <ipv4 ip>
+  ipv6: <ipv6 ip>
 #}
 {% for zone in dns_zones %}
 local-zone: "{{ zone.name }}" redirect
@@ -25,4 +30,9 @@ local-data-ptr: "{{ zone_host.ip }} {{ zone_host.name }}"
 {% endfor %}
 
 
+{% endfor %}
+{% for host in dns_hosts %}
+local-data: "{{ host.name }} A {{ host.ip }}"
+local-data: "{{ host.name }} AAAA {{ host.ipv6 }}"
+local-data-ptr: "{{ host.ip }} {{ host.name }}"
 {% endfor %}
