@@ -28,7 +28,15 @@
     dest: "/home/{{ user }}/git/packages/gef"
     depth: 1
 
-- name: Configuring gdb to use GEF
+- name: Downloading exploitable to enhance GDB
+  become: yes
+  become_user: "{{ user }}"
+  git:
+    repo: https://github.com/jfoote/exploitable
+    dest: "/home/{{ user }}/git/packages/gdb-exploitable"
+    depth: 1
+
+- name: Configuring gdb to use GEF and exploitable
   copy:
     src: gdbinit
     dest: "/home/{{ user }}/.gdbinit"

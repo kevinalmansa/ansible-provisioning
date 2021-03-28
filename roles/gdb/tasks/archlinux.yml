@@ -1,5 +1,14 @@
 ---
 
+- name: Installing python for gdb plugins
+  become: yes
+  pacman:
+    name:
+      - python
+      - python-pip
+      - python-setuptools
+    state: present
+
 - name: Installing gdb
   pacman:
     name: gdb
