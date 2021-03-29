@@ -4,15 +4,15 @@
   become: yes
   become_user: "{{ user }}"
   file:
-    path: "/home/{{ user }}/aur"
+    path: "{{ aur_location }}"
     state: directory
 
 - name: Clone sipvicious AUR repo
   become: yes
   become_user: "{{ user }}"
   git:
-    repo: https://aur.archlinux.org/sipvicious.git
-    dest: "/home/{{ user }}/aur/sipvicious"
+    repo: "{{ package_repo }}"
+    dest: "{{ aur_location }}/sipvicious"
   register: sipvicious_clone
 
 - name: Install sipvicious
@@ -20,5 +20,5 @@
   become_user: "{{ user }}"
   command: makepkg --noconfirm -si
   args:
-    chdir: "/home/{{ user }}/aur/sipvicious"
+    chdir: "{{ aur_location }}/sipvicious"
   when: sipvicious_clone.changed
