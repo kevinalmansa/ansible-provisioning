@@ -1,0 +1,60 @@
+---
+
+- name: Include distro specific variables
+  include_vars: "{{ loop_aflplusplus_vars }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution_release | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  loop_control:
+    loop_var: loop_aflplusplus_vars
+
+- name: Run distro specific base tasks
+  include_tasks: "{{ loop_aflplusplus_tasks }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution_release | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  loop_control:
+    loop_var: loop_aflplusplus_tasks
+
+- name: Ensure packages directory exists for user
+  become: yes
+  become_user: "{{ user }}"
+  file:
+    path: "{{ download_location }}"
+    state: directory
+
+- name: Checkout git repository
+  become: yes
+  become_user: "{{ user }}"
+  git:
+    repo: "{{ package_repo }}"
+    dest: "{{ download_location }}/honggfuzz"
+    version: "{{ version }}"
+    depth: "1"
+
+- name: Build Project
+  become: yes
+  become_user: "{{ user }}"
+  make:
+    chdir: "{{ download_location }}/honggfuzz"
+
+- name: Install Project
+  make:
+    chdir: "{{ download_location }}/honggfuzz"
+    target: install
+  become: yes
+
+- name: Clean build artifacts
+  become: yes
+  become_user: "{{ user }}"
+  make:
+    chdir: "{{ download_location }}/honggfuzz"
+    target: clean

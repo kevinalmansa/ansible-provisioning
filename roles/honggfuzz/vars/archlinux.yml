@@ -1,0 +1,9 @@
+---
+
+dependencies:
+  - binutils
+  - clang
+  - llvm
+  - base-devel
+  - libunwind
+  - git

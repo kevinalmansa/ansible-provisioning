@@ -1,0 +1,10 @@
+---
+
+# Where to clone the package on the fs
+download_location: "/home/vagrant/git/packages"
+
+# Version of AFLPlusplus to install
+version: "2.4"
+
+# default user to build and install this with
+user: vagrant
