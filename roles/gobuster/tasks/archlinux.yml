@@ -4,15 +4,15 @@
   become: yes
   become_user: "{{ user }}"
   file:
-    path: "/home/{{ user }}/aur"
+    path: "{{ aur_location }}"
     state: directory
 
 - name: Clone gobuster AUR repo
   become: yes
   become_user: "{{ user }}"
   git:
-    repo: https://aur.archlinux.org/gobuster-git.git
-    dest: "/home/{{ user }}/aur/gobuster-git"
+    repo: "{{ package_repo }}"
+    dest: "{{ aur_location }}/gobuster-git"
   register: gobuster_clone
 
 - name: Install gobuster
@@ -20,5 +20,5 @@
   become_user: "{{ user }}"
   command: makepkg --noconfirm -si
   args:
-    chdir: "/home/{{ user }}/aur/gobuster-git"
+    chdir: "{{ aur_location }}/gobuster-git"
   when: gobuster_clone.changed
