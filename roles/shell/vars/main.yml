@@ -1,0 +1,16 @@
+---
+
+# git repo location to clone
+ohmyzsh_install_script: "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+
+# powerline git repo
+powerline_repo: "https://aur.archlinux.org/powerline-fonts-git.git"
+
+# nerd fonts git repo
+nerdfonts_repo: "https://github.com/ryanoasis/nerd-fonts.git"
+
+# spaceship prompt repo
+spaceship_repo: "https://github.com/denysdovhan/spaceship-prompt.git"
+
+# AUR location to clone AUR package
+aur_location: "/home/vagrant/aur"

@@ -2,6 +2,8 @@
 
 base_packages:
   - base-devel
+  - clang
+  - llvm
   - linux-headers
   - git
   - p7zip
@@ -20,3 +22,4 @@ base_packages:
   - strace
   - man-db
   - dnsutils
+  - screen

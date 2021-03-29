@@ -16,67 +16,17 @@
   command: "chsh -s /bin/zsh {{ user }}"
   changed_when: False
 
-- name: Ensure oh-my-zsh directory exists for user
-  become: yes
-  become_user: "{{ user }}"
-  file:
-    path: "/home/{{ user }}/git/packages/oh-my-zsh"
-    state: directory
-
-- name: Download oh-my-zsh
-  become: yes
-  become_user: "{{ user }}"
-  get_url:
-    url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-    dest: "/home/{{ user }}/git/packages/oh-my-zsh/ohmyzsh_install.sh"
-    mode: '0755'
-  register: ohmyzsh_download
+- name: Check if oh-my-zsh is already installed
+  stat:
+    path: "/home/{{ user }}/.oh-my-zsh"
+  register: ohmyzsh_installed
 
 - name: Install oh-my-zsh
-  become: yes
-  become_user: "{{ user }}"
-  command: "/home/{{ user }}/git/packages/oh-my-zsh/ohmyzsh_install.sh"
-  args:
-    chdir: "/home/{{ user }}"
-  when: ohmyzsh_download.changed
+  include_tasks: ohmyzsh.yml
+  when: not ohmyzsh_installed.stat.exists
 
-- name: Ensure aur directory exists for user
-  become: yes
-  become_user: "{{ user }}"
-  file:
-    path: "/home/{{ user }}/aur"
-    state: directory
-
-- name: Clone powerline fonts AUR repo
-  become: yes
-  become_user: "{{ user }}"
-  git:
-    repo: https://aur.archlinux.org/powerline-fonts-git.git
-    dest: /home/{{ user }}/aur/powerline-fonts-git
-  register: powerlinefonts_clone
-
-- name: Install powerline fonts
-  become: yes
-  become_user: "{{ user }}"
-  command: makepkg --noconfirm -si
-  args:
-    chdir: "/home/{{ user }}/aur/powerline-fonts-git"
-  when: powerlinefonts_clone.changed
-
-- name: Git checkout nerd-fonts
-  become: yes
-  become_user: "{{ user }}"
-  git:
-    repo: 'https://github.com/ryanoasis/nerd-fonts.git'
-    dest: "/home/{{ user }}/git/packages/nerd-fonts"
-    depth: 1
-  register: nerdfonts_clone
-
-- name: Install nerd-fonts
-  become: yes
-  become_user: "{{ user }}"
-  command: "/home/{{ user }}/git/packages/nerd-fonts/install.sh"
-  when: nerdfonts_clone.changed
+- name: Install nerd fonts
+  include_tasks: nerdfonts.yml
 
 - name: Ensures go dir exists
   file:
@@ -85,18 +35,5 @@
     owner: "{{ user }}"
     group: "{{ user }}"
 
-- name: Download Spaceship
-  become: yes
-  become_user: "{{ user }}"
-  git:
-    repo: https://github.com/denysdovhan/spaceship-prompt.git
-    dest: "/home/{{ user }}/git/packages/spaceship-prompt"
-    depth: 1
-
-- name: Install Spaceship
-  file:
-    src: "/home/{{ user }}/git/packages/spaceship-prompt/spaceship.zsh-theme"
-    dest: "/home/{{ user }}/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    state: link
+- name: Install spaceship prompt
+  include_tasks: spaceship.yml

@@ -1,0 +1,17 @@
+---
+
+- name: Download Spaceship
+  become: yes
+  become_user: "{{ user }}"
+  git:
+    repo: "{{ spaceship_repo }}"
+    dest: "{{ download_location }}/spaceship-prompt"
+    depth: "1"
+
+- name: Install Spaceship
+  file:
+    src: "{{ download_location }}/spaceship-prompt/spaceship.zsh-theme"
+    dest: "/home/{{ user }}/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    state: link

@@ -1,0 +1,16 @@
+---
+
+- name: Git checkout nerd-fonts
+  become: yes
+  become_user: "{{ user }}"
+  git:
+    repo: "{{ nerdfonts_repo }}"
+    dest: "{{ download_location }}/nerd-fonts"
+    depth: "1"
+  register: nerdfonts_clone
+
+- name: Install nerd-fonts
+  become: yes
+  become_user: "{{ user }}"
+  command: "{{ download_location }}/nerd-fonts/install.sh"
+  when: nerdfonts_clone.changed

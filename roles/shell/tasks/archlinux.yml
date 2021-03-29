@@ -7,3 +7,26 @@
       - zsh-completions
       - zsh-autosuggestions
     state: present
+
+- name: Ensure aur directory exists for user
+  become: yes
+  become_user: "{{ user }}"
+  file:
+    path: "{{ aur_location }}"
+    state: directory
+
+- name: Clone powerline fonts AUR repo
+  become: yes
+  become_user: "{{ user }}"
+  git:
+    repo: "{{ powerline_repo }}"
+    dest: "{{ aur_location }}/powerline-fonts-git"
+  register: powerlinefonts_clone
+
+- name: Install powerline fonts
+  become: yes
+  become_user: "{{ user }}"
+  command: makepkg --noconfirm -si
+  args:
+    chdir: "{{ aur_location }}/powerline-fonts-git"
+  when: powerlinefonts_clone.changed

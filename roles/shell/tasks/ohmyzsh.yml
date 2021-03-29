@@ -1,0 +1,25 @@
+---
+
+- name: Ensure oh-my-zsh directory exists for user
+  become: yes
+  become_user: "{{ user }}"
+  file:
+    path: "{{ download_location }}/oh-my-zsh"
+    state: directory
+
+- name: Download oh-my-zsh
+  become: yes
+  become_user: "{{ user }}"
+  get_url:
+    url: "{{ ohmyzsh_install_script }}"
+    dest: "{{ download_location }}/oh-my-zsh/ohmyzsh_install.sh"
+    mode: '0755'
+  register: ohmyzsh_download
+
+- name: Install oh-my-zsh
+  become: yes
+  become_user: "{{ user }}"
+  command: "{{ download_location }}/oh-my-zsh/ohmyzsh_install.sh"
+  args:
+    chdir: "/home/{{ user }}"
+  when: ohmyzsh_download.changed
