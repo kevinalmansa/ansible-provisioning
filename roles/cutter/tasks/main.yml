@@ -1,5 +1,5 @@
-- name: Run distro specific install tasks for burpsuite
-  include_tasks: "{{ loop_burpsuite_tasks }}"
+- name: Run distro specific install tasks for cutter
+  include_tasks: "{{ loop_cutter_tasks }}"
   with_first_found:
     - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
     - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
@@ -8,4 +8,4 @@
     - "{{ ansible_distribution | lower }}.yml"
     - "{{ ansible_os_family | lower }}.yml"
   loop_control:
-    loop_var: loop_burpsuite_tasks
+    loop_var: loop_cutter_tasks
