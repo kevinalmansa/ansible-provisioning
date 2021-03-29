@@ -4,7 +4,7 @@
   become: yes
   become_user: "{{ user }}"
   file:
-    path: "/home/{{ user }}/aur"
+    path: "{{ aur_location }}"
     state: directory
 
 - name: Clone burpsuite AUR repo
@@ -12,7 +12,7 @@
   become_user: "{{ user }}"
   git:
     repo: https://aur.archlinux.org/burpsuite.git
-    dest: "/home/{{ user }}/aur/burpsuite"
+    dest: "{{ aur_location }}/burpsuite"
   register: burpsuite_clone
 
 - name: Install burpsuite
@@ -20,5 +20,5 @@
   become_user: "{{ user }}"
   command: makepkg --noconfirm -si
   args:
-    chdir: "/home/{{ user }}/aur/burpsuite"
+    chdir: "{{ aur_location }}/burpsuite"
   when: burpsuite_clone.changed

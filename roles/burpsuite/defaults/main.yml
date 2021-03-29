@@ -1,3 +1,4 @@
 ---
 
+# default user to build and install this with
 user: vagrant

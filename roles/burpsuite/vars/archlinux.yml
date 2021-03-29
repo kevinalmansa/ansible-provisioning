@@ -1,0 +1,4 @@
+---
+
+# AUR location to clone AUR package
+aur_location: "/home/vagrant/aur"
