@@ -1,0 +1,40 @@
+---
+
+- name: Check if Terraform Plugin already installed
+  stat:
+    path: "/home/{{ user }}/.asdf/installs/terraform"
+  register: terraform_install
+
+- name: Print if terraform is already identified on the system, installed via asdf
+  debug:
+    msg: "{{ terraform_install }}"
+
+- name: Check if Version of Terraform already installed
+  stat:
+    path: "/home/{{ user }}/.asdf/installs/terraform/{{ terraform_version }}"
+  register: terraform_install_version
+
+- name: Print if terraform version is already identified on the system, installed via asdf
+  debug:
+    msg: "{{ terraform_install_version }}"
+
+- name: Install Terraform addon for asdf
+  become: yes
+  become_user: "{{ user }}"
+  command: "/home/{{ user }}/.asdf/bin/asdf plugin-add terraform https://github.com/Banno/asdf-hashicorp.git"
+  when: (terraform_version is defined) and (terraform_version|length > 0) and (not terraform_install.stat.exists)
+  ignore_errors: yes
+
+- name: Install Terraform Version with asdf
+  become: yes
+  become_user: "{{ user }}"
+  command: "/home/{{ user }}/.asdf/bin/asdf install terraform {{ terraform_version }}"
+  when: (terraform_version is defined) and (terraform_version|length > 0) and (not terraform_install_version.stat.exists)
+  ignore_errors: yes
+
+
+- name: Set version of Terraform
+  become: yes
+  become_user: "{{ user }}"
+  command: "/home/{{ user }}/.asdf/bin/asdf global terraform {{ terraform_version }}"
+  changed_when: false

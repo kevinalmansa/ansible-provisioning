@@ -1,0 +1,7 @@
+---
+
+# User to provision with this role
+user: vagrant
+
+# Version of terraform to install. Empty to not install.
+terraform_version: "0.14.9"
