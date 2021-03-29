@@ -4,15 +4,15 @@
   become: yes
   become_user: "{{ user }}"
   file:
-    path: "/home/{{ user }}/aur"
+    path: "{{ aur_location }}"
     state: directory
 
 - name: Clone onesixtyone AUR repo
   become: yes
   become_user: "{{ user }}"
   git:
-    repo: https://aur.archlinux.org/onesixtyone-git.git
-    dest: "/home/{{ user }}/aur/onesixtyone"
+    repo: "{{ package_repo }}"
+    dest: "{{ aur_location }}/onesixtyone"
   register: onesixtyone_clone
 
 - name: Install onesixtyone
@@ -20,5 +20,5 @@
   become_user: "{{ user }}"
   command: makepkg --noconfirm -si
   args:
-    chdir: "/home/{{ user }}/aur/onesixtyone"
+    chdir: "{{ aur_location }}/onesixtyone"
   when: onesixtyone_clone.changed
