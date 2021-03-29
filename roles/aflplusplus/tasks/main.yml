@@ -24,24 +24,38 @@
   loop_control:
     loop_var: loop_aflplusplus_tasks
 
+- name: Ensure packages directory exists for user
+  become: yes
+  become_user: "{{ user }}"
+  file:
+    path: "{{ download_location }}"
+    state: directory
+
 - name: Checkout git repository
   become: yes
   become_user: "{{ user }}"
   git:
-    repo: https://github.com/AFLplusplus/AFLplusplus.git
-    dest: "{{ download_location }}"
+    repo: "{{ package_repo }}"
+    dest: "{{ download_location }}/aflplusplus"
     version: "{{ version }}"
-    depth: 1
+    depth: "1"
 
 - name: Build Project
   become: yes
   become_user: "{{ user }}"
   make:
-    chdir: "{{ download_location }}"
-    target: distrib
+    chdir: "{{ download_location }}/aflplusplus"
+    target: "{{ build_target }}"
 
 - name: Install Project
   make:
-    chdir: "{{ download_location }}"
+    chdir: "{{ download_location }}/aflplusplus"
     target: install
   become: yes
+
+- name: Clean build artifacts
+  become: yes
+  become_user: "{{ user }}"
+  make:
+    chdir: "{{ download_location }}/aflplusplus"
+    target: deepclean

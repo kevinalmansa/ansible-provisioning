@@ -1,0 +1,10 @@
+---
+
+# Where to clone the package on the fs
+download_location: "/home/vagrant/git/packages"
+
+# Version of AFLPlusplus to install
+version: "3.12c"
+
+# Build Target to give the makefile, distrib installs everything
+build_target: "distrib"

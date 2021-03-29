@@ -1,2 +1,4 @@
-download_location: "/home/vagrant/git/packages/aflplusplus"
-version: "3.12c"
+---
+
+# git repo location to clone
+package_repo: "https://github.com/AFLplusplus/AFLplusplus.git"
