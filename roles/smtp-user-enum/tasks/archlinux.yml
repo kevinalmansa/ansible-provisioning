@@ -4,15 +4,15 @@
   become: yes
   become_user: "{{ user }}"
   file:
-    path: "/home/{{ user }}/aur"
+    path: "{{ aur_location }}"
     state: directory
 
 - name: Clone smtp-user-enum AUR repo
   become: yes
   become_user: "{{ user }}"
   git:
-    repo: https://aur.archlinux.org/smtp-user-enum-git.git
-    dest: "/home/{{ user }}/aur/smtp-user-enum"
+    repo: "{{ package_repo }}"
+    dest: "{{ aur_location }}/smtp-user-enum"
   register: smtpuserenum_clone
 
 - name: Install smtp-user-enum
@@ -20,5 +20,5 @@
   become_user: "{{ user }}"
   command: makepkg --noconfirm -si
   args:
-    chdir: "/home/{{ user }}/aur/smtp-user-enum"
+    chdir: "{{ aur_location }}/smtp-user-enum"
   when: smtpuserenum_clone.changed
