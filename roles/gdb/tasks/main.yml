@@ -36,6 +36,28 @@
     dest: "/home/{{ user }}/git/packages/gdb-exploitable"
     depth: 1
 
+- name: Installing exploitable
+  become: yes
+  shell:
+    chdir: "/home/{{ user }}/git/packages/gdb-exploitable"
+    cmd: python setup.py install
+
+- name: Create a src directory in user home (crashwalk uses this)
+  file:
+    path: "/home/{{ user }}/src"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: '0755'
+
+- name: Creating symbolic link in home to exploitable called src for use with crashwalk
+  file:
+    src: "/home/{{ user }}/git/packages/gdb-exploitable"
+    dest: "/home/{{ user }}/src/exploitable"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    state: link
+
 - name: Configuring gdb to use GEF and exploitable
   copy:
     src: gdbinit
