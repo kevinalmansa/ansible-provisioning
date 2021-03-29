@@ -8,3 +8,6 @@ version: "3.12c"
 
 # Build Target to give the makefile, distrib installs everything
 build_target: "distrib"
+
+# default user to build and install this with
+user: vagrant
