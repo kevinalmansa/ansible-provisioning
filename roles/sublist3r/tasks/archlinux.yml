@@ -1,24 +1,7 @@
 ---
 
-- name: Ensuring git directory exists
+- name: Installing dependencies
   become: yes
-  become_user: "{{ user }}"
-  file:
-    path: "/home/{{ user }}/git/packages"
-    state: directory
-    mode: '0755'
-
-- name: Downloading Sublist3r
-  become: yes
-  become_user: "{{ user }}"
-  git:
-    repo: https://github.com/aboul3la/Sublist3r.git
-    dest: "/home/{{ user }}/git/packages/sublist3r"
-
-- name: Installing Sublist3r dependencies
-  become: yes
-  become_user: "{{ user }}"
-  pip:
-    requirements: "/home/{{ user }}/git/packages/sublist3r/requirements.txt"
-    virtualenv: "/home/{{ user }}/git/packages/sublist3r/venv"
-    virtualenv_command: python3 -m venv
+  pacman:
+    name: "{{ dependencies }}"
+    state: present

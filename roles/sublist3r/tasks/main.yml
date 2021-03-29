@@ -1,5 +1,17 @@
 ---
 
+- name: Include distro specific variables
+  include_vars: "{{ loop_sublist3r_vars }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution_release | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  loop_control:
+    loop_var: loop_sublist3r_vars
+
 - name: Run distro specific base tasks
   include_tasks: "{{ loop_sublist3r_tasks }}"
   with_first_found:
@@ -11,3 +23,25 @@
     - "{{ ansible_os_family | lower }}.yml"
   loop_control:
     loop_var: loop_sublist3r_tasks
+
+- name: Ensuring download target directory exists
+  become: yes
+  become_user: "{{ user }}"
+  file:
+    path: "{{ download_location }}"
+    state: directory
+
+- name: Downloading Sublist3r
+  become: yes
+  become_user: "{{ user }}"
+  git:
+    repo: "{{ package_repo }}"
+    dest: "{{ download_location }}/sublist3r"
+
+- name: Installing Sublist3r pip dependencies
+  become: yes
+  become_user: "{{ user }}"
+  pip:
+    requirements: "{{ download_location }}/sublist3r/requirements.txt"
+    virtualenv: "{{ download_location }}/sublist3r/venv"
+    virtualenv_command: "python3 -m venv"
