@@ -4,13 +4,13 @@
   become: yes
   become_user: "{{ user }}"
   file:
-    path: "/home/{{ user }}/git/packages"
+    path: "{{ download_location }}"
     state: directory
 
 - name: Clone SecLists repo
   become: yes
   become_user: "{{ user }}"
   git:
-    repo: https://github.com/danielmiessler/SecLists.git
-    dest: "/home/{{ user }}/git/packages/seclists"
-    depth: 1
+    repo: "{{ package_repo }}"
+    dest: "{{ download_location }}/seclists"
+    depth: "1"

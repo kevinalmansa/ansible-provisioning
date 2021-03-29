@@ -1,3 +1,7 @@
 ---
 
+# Where to clone the package on the fs
+download_location: "/home/vagrant/git/packages"
+
+# default user to build and install this with
 user: vagrant
