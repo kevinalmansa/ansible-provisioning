@@ -1,0 +1,17 @@
+dependencies:
+  - python
+  - python-pip
+  - python-setuptools
+  - coreutils
+  - lib32-glibc
+  - glib2
+  - clang
+  - llvm
+  - base-devel
+  - wget
+  - gnuplot
+  - rsync
+  - gdb
+  - screen
+  - sqlite
+  - git

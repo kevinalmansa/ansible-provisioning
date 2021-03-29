@@ -1,0 +1,10 @@
+---
+
+- name: Dynamically try and determine GOPATH
+  set_fact:
+      go_path: "{{ lookup('env', 'GOPATH') | default(ansible_env.HOME+'/go', true) }}"
+
+- name: Install Crashwalk
+  shell: go get -u github.com/bnagy/crashwalk/cmd/...
+  environment:
+    GOPATH: "{{ go_path }}"

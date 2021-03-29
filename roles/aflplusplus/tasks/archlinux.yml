@@ -1,0 +1,7 @@
+---
+
+- name: Installing dependencies
+  become: yes
+  pacman:
+    name: "{{ dependencies }}"
+    state: present
