@@ -16,6 +16,7 @@
     - iptables
     - shell
     - asdf
+    - terraform
     - dotfiles
     - xorg
     - i3 # can replace with gnome
@@ -23,15 +24,18 @@
     - golang
     - nasm
     - gdb
+    - aflplusplus
+    - crashwalk
+    - honggfuzz
     - firefox
     - google-chrome
     - intellij
     - vscode
     - docker
-    - ansible
     - openssh
     - openvpn
     - nmap
+    - sslscan
     - wireshark
     - proxychains
     - smbclient
