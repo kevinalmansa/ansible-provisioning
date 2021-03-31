@@ -1,4 +1,4 @@
 ---
 
 # git repo location to clone
-package_repo: "https://github.com/danielmiessler/SecLists.git"
+seclists_package_repo: "https://github.com/danielmiessler/SecLists.git"

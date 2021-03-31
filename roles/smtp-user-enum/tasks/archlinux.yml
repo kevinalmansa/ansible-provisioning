@@ -11,7 +11,7 @@
   become: yes
   become_user: "{{ user }}"
   git:
-    repo: "{{ package_repo }}"
+    repo: "{{ smtpuserenum_package_repo }}"
     dest: "{{ aur_location }}/smtp-user-enum"
   register: smtpuserenum_clone
 

@@ -12,6 +12,7 @@ disk='sda'
 # get last partition
 part=$(grep  "${disk}" /proc/partitions | tail -1 | awk '{print $4}' | xargs)
 partN=$(echo $part | tail -c 2)
+fstype=$(mount | grep /dev/$part | cut -d" " -f5)
 
 # fdisk: delete and recreate the last partition with the largest size possible.
 (
@@ -26,4 +27,9 @@ echo w # Write changes
 ) | fdisk /dev/$disk
 
 # update filesystem to match new partition size
-resize2fs /dev/$part
+if [ $fstype = "btrfs" ]; then
+    partprobe
+    btrfs filesystem resize max /
+else
+    resize2fs /dev/$part
+fi

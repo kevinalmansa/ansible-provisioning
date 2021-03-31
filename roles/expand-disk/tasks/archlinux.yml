@@ -3,5 +3,5 @@
 - name: Installing dependencies
   become: yes
   pacman:
-    name: "{{ honggfuzz_dependencies }}"
+    name: "parted"
     state: present

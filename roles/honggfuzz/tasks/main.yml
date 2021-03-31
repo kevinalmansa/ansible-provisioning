@@ -35,9 +35,9 @@
   become: yes
   become_user: "{{ user }}"
   git:
-    repo: "{{ package_repo }}"
+    repo: "{{ honggfuzz_package_repo }}"
     dest: "{{ download_location }}/honggfuzz"
-    version: "{{ version }}"
+    version: "{{ honggfuzz_version }}"
     depth: "1"
 
 - name: Build Project

@@ -1,6 +1,6 @@
 ---
 
-dependencies:
+sublist3r_dependencies:
   - python
   - python-pip
   - python-setuptools

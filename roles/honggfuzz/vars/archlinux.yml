@@ -1,6 +1,6 @@
 ---
 
-dependencies:
+honggfuzz_dependencies:
   - binutils
   - clang
   - llvm

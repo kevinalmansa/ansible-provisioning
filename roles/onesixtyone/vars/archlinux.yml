@@ -2,4 +2,4 @@
 
 # AUR location to clone AUR package
 aur_location: "/home/vagrant/aur"
-package_repo: "https://aur.archlinux.org/onesixtyone-git.git"
+onesixtyone_package_repo: "https://aur.archlinux.org/onesixtyone-git.git"

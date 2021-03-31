@@ -35,9 +35,9 @@
   become: yes
   become_user: "{{ user }}"
   git:
-    repo: "{{ package_repo }}"
+    repo: "{{ aflplusplus_package_repo }}"
     dest: "{{ download_location }}/aflplusplus"
-    version: "{{ version }}"
+    version: "{{ afl_plusplus_version }}"
     depth: "1"
 
 - name: Build Project
@@ -45,7 +45,7 @@
   become_user: "{{ user }}"
   make:
     chdir: "{{ download_location }}/aflplusplus"
-    target: "{{ build_target }}"
+    target: "{{ afl_plusplus_build_target }}"
 
 - name: Install Project
   make:

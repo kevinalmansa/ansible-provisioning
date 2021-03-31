@@ -1,6 +1,6 @@
 ---
 
-dependencies:
+aflplusplus_dependencies:
   - python
   - python-pip
   - python-setuptools

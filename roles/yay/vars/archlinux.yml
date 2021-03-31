@@ -4,4 +4,4 @@
 aur_location: "/home/vagrant/aur"
 
 # git repo to clone package from
-package_repo: "https://aur.archlinux.org/yay.git"
+yay_package_repo: "https://aur.archlinux.org/yay.git"

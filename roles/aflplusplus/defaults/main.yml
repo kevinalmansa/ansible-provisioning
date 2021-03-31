@@ -4,10 +4,10 @@
 download_location: "/home/vagrant/git/packages"
 
 # Version of AFLPlusplus to install
-version: "3.12c"
+afl_plusplus_version: "3.12c"
 
 # Build Target to give the makefile, distrib installs everything
-build_target: "distrib"
+afl_plusplus_build_target: "distrib"
 
 # default user to build and install this with
 user: vagrant
