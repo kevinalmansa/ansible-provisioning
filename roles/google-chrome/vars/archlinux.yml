@@ -2,4 +2,4 @@
 
 # AUR location to clone AUR package
 aur_location: "/home/vagrant/aur"
-package_repo: "https://aur.archlinux.org/google-chrome.git"
+chrome_package_repo: "https://aur.archlinux.org/google-chrome.git"
